@@ -1,42 +1,61 @@
 <template>
-  <div id="userLayout">
+  <div id="user-layout">
     <a-layout style="min-height: 100vh">
-      <a-layout-header class="header">
-        <a-space>
-          <img src="../assets/bar.jpg" class="logo" />
-          <div>YOJ</div>
-        </a-space>
-      </a-layout-header>
       <a-layout-content class="content">
         <router-view />
       </a-layout-content>
-      <a-layout-footer class="footer">yoj by ytb 2024-02-02</a-layout-footer>
+      <a-layout-footer class="footer">
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 35px;
+            margin-top: 8px;
+          "
+        >
+          <a
+            href="https://github.com/daydayup-ytb"
+            target="_blank"
+            style="text-decoration: none; display: flex; align-items: center"
+          >
+            <icon-github
+              style="color: #262626bf"
+              :style="{ fontSize: '20px', marginRight: '5px' }"
+            />
+            <span
+              style="margin-bottom: 0; text-decoration: none; color: #262626bf"
+              >day-day-up GitHub</span
+            >
+          </a>
+        </div>
+      </a-layout-footer>
     </a-layout>
   </div>
 </template>
-<style>
-#userLayout {
+
+<style scoped>
+#user-layout {
   text-align: center;
-  background: url("https://gw.alipayobjects.com/zos/rmsportal/FfdJeJRQWjEeGTpqgBKj.png")
-    0% 0% / 100% 100%;
+  background-image: url("../assets/背景.png");
+  background-size: cover;
+  background-color: #f7f8fa;
 }
 
-#userLayout .logo {
-  width: 64px;
-  height: 64px;
+#user-layout .header {
+  margin-top: 250px;
 }
 
-#userLayout .header {
-  margin-top: 16px;
-}
-
-#userLayout .content {
+#user-layout .content {
   margin-bottom: 16px;
-  padding: 20px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#userLayout .footer {
-  padding: 16px;
+#user-layout .footer {
+  margin-bottom: 16px;
   position: sticky;
   bottom: 0;
   left: 0;
@@ -44,4 +63,5 @@
   text-align: center;
 }
 </style>
+
 <script setup lang="ts"></script>

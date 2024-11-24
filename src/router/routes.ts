@@ -1,6 +1,4 @@
 import { RouteRecordRaw } from "vue-router";
-import HomeView from "@/views/ExampleView.vue";
-import AdminView from "@/views/AdminView.vue";
 import NoAuthView from "@/views/NoAuthView.vue";
 import ACCESS_ENUM from "@/access/accessEnum";
 import UserLayout from "@/layouts/UserLayout.vue";
@@ -8,8 +6,8 @@ import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
 import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
-import QuestionsView from "@/views/question/QuestionsView.vue";
-import ViewQuestionView from "@/views/question/ViewQuestionView.vue";
+import QuestionBank from "@/views/question/QuestionBank.vue";
+import DoQuestionOnline from "@/views/question/DoQuestionOnline.vue";
 import QuestionSubmitView from "@/views/question/QuestionSubmitView.vue";
 
 export const routes: Array<RouteRecordRaw> = [
@@ -36,12 +34,12 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "主页",
-    component: QuestionsView,
+    component: QuestionBank,
   },
   {
-    path: "/questions",
-    name: "浏览题目",
-    component: QuestionsView,
+    path: "/questionBank",
+    name: "题库",
+    component: QuestionBank,
   },
   {
     path: "/question_submit",
@@ -51,7 +49,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/view/question/:id",
     name: "在线做题",
-    component: ViewQuestionView,
+    component: DoQuestionOnline,
     props: true,
     meta: {
       access: ACCESS_ENUM.USER,

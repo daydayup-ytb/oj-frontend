@@ -22,4 +22,5 @@ export type QuestionVO = {
   updateTime?: string;
   userId?: number;
   userVO?: UserVO;
+  state?:number;
 };

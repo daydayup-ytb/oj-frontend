@@ -3,8 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type QuestionQueryRequest = {
-  answer?: string;
-  content?: string;
   current?: number;
   id?: number;
   pageSize?: number;
@@ -13,4 +11,7 @@ export type QuestionQueryRequest = {
   tags?: Array<string>;
   title?: string;
   userId?: number;
+  searchText?:string;
+  difficulty?:number;
+  state?:number;
 };

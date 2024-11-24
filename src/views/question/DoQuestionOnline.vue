@@ -1,5 +1,5 @@
 <template>
-  <div id="viewQuestionView">
+  <div id="DoQuestionOnline">
     <div
       style="
         height: 5vh;
@@ -17,12 +17,26 @@
           align-items: center;
         "
       >
-        <img class="logo" :src="require('@/assets/bar.jpg')" alt="LOGO" />
+        <img
+          class="logo"
+          :src="require('@/assets/我家哥哥的蛋.png')"
+          @click="toHomePage"
+          alt="LOGO"
+        />
         <a-divider direction="vertical" />
-        <a-button :style="buttonStyle">
+        <a-button
+          :style="buttonStyle"
+          @mouseover="handleMouseOver"
+          @mouseleave="handleMouseLeave"
+          @click="handleClick"
+        >
           <icon-menu-unfold style="margin-right: 10px" size="20" />
           题库
-          <a-button :style="buttonStyle">
+          <a-button
+            :style="buttonStyle"
+            @mouseover="handleMouseOver"
+            @mouseleave="handleMouseLeave"
+          >
             <icon-launch style="margin: -18px" size="12" />
           </a-button>
         </a-button>
@@ -48,7 +62,7 @@
             <a-space direction="vertical">
               <a-list
                 style="margin-bottom: 25px"
-                :data="dataList"
+                :data="questionList"
                 :hoverable="true"
                 :pagination-props="{
                   bufferSize: 3,
@@ -301,7 +315,7 @@
               </template>
               <template v-if="selectedTab === 'submissions'">
                 <div>
-                  <NoteViewPage />
+                  <NoteViewPage :question="question" />
                 </div>
               </template>
               <template v-if="selectedTab === 'description'">
@@ -1227,16 +1241,14 @@ import {
   QuestionControllerService,
   QuestionQueryRequest,
   type QuestionSubmitAddRequest,
-  QuestionVO,
 } from "../../../request";
 import message from "@arco-design/web-vue/es/message";
 import CodeEditor from "@/components/CodeEditor.vue";
-import MdViewer from "@/components/MdViewer.vue";
 import IconRun from "@/icon/icon-run.vue";
 import IconFlame from "@/icon/icon-flame.vue";
 import IconSmallBell from "@/icon/icon-small-bell.vue";
 import IconSubmit from "@/icon/icon-submit.vue";
-import NoteViewPage from "@/components/NoteViewPage.vue";
+import NoteViewPage from "@/views/question/NoteViewPage.vue";
 import AnswerViewPage from "@/views/question/AnswerViewPage.vue";
 import QuestionViewPage from "@/components/QuestionViewPage.vue";
 import { useStore } from "vuex";
@@ -1263,6 +1275,18 @@ const form = ref<QuestionSubmitAddRequest>({
   language: "java",
   code: "",
 });
+
+const toHomePage = () => {
+  window.location.href = "/questionBank"; // 跳转到另一个页面
+};
+
+const handleMouseOver = () => {
+  buttonStyle.value.backgroundColor = "#E2E2E2";
+};
+
+const handleMouseLeave = () => {
+  buttonStyle.value.backgroundColor = "#f0f0f0";
+};
 
 const testCase = ref();
 
@@ -1350,12 +1374,12 @@ const handleCancel = () => {
 };
 
 //题库抽屉数据
-const dataList = ref([]);
+const questionList = ref([]);
 const total = ref(0);
 const submitNumber = ref(0);
 
 const searchParams = ref<QuestionQueryRequest>({
-  pageSize: 50,
+  pageSize: 15,
   current: 1,
 });
 
@@ -1391,15 +1415,15 @@ const changeColumn = (value: string) => {
 };
 
 const loadData = async () => {
-  const quesionPageres =
+  const questionBankRes =
     await QuestionControllerService.listQuestionVoByPageUsingPost(
       searchParams.value
     );
-  if (quesionPageres.code === 0) {
-    dataList.value = quesionPageres.data.records;
-    total.value = quesionPageres.data.total;
+  if (questionBankRes.code === 0) {
+    questionList.value = questionBankRes.data.records;
+    total.value = questionBankRes.data.total;
   } else {
-    message.error("加载失败：" + quesionPageres.message);
+    message.error("题库加载失败：" + questionBankRes.message);
   }
 
   const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
@@ -1453,7 +1477,7 @@ const switchCase = (id: string) => {
 </script>
 
 <style scoped>
-#viewQuestionView {
+#DoQuestionOnline {
   background-color: #f0f0f0;
   overflow: hidden;
 }

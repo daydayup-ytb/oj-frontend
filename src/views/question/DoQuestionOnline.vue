@@ -89,7 +89,9 @@
                           "
                         >
                           <div style="width: 480px; display: flex">
-                            <a-link style="color: #262626"
+                            <a-link
+                              style="color: #262626"
+                              @click="toOtherQuestion(item.id)"
                               >{{ item.title }}
                             </a-link>
                           </div>
@@ -697,7 +699,7 @@
                       </div>
                     </div>
                     <a-divider />
-                    <CodeEditor
+                    <MonacoEditor
                       :val="question?.initialCode"
                       :language="form.language"
                       :handle-change="changeCode"
@@ -1192,7 +1194,7 @@
     <!--            </a-select>-->
     <!--          </a-form-item>-->
     <!--        </a-form>-->
-    <!--        <CodeEditor-->
+    <!--        <MonacoEditor-->
     <!--          :val="question?.initialCode"-->
     <!--          :language="form.language"-->
     <!--          :handle-change="changeCode"-->
@@ -1236,14 +1238,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, withDefaults, defineProps, toRef } from "vue";
+import {
+  onMounted,
+  ref,
+  withDefaults,
+  defineProps,
+  toRef,
+  watchEffect,
+} from "vue";
 import {
   QuestionControllerService,
   QuestionQueryRequest,
   type QuestionSubmitAddRequest,
 } from "../../../request";
 import message from "@arco-design/web-vue/es/message";
-import CodeEditor from "@/components/CodeEditor.vue";
+import MonacoEditor from "@/components/MonacoEditor.vue";
 import IconRun from "@/icon/icon-run.vue";
 import IconFlame from "@/icon/icon-flame.vue";
 import IconSmallBell from "@/icon/icon-small-bell.vue";
@@ -1287,6 +1296,9 @@ const handleMouseOver = () => {
 const handleMouseLeave = () => {
   buttonStyle.value.backgroundColor = "#f0f0f0";
 };
+
+//题目编号
+const questionId = ref();
 
 const testCase = ref();
 
@@ -1454,6 +1466,14 @@ const doSubmit = async () => {
   }
 };
 
+/**
+ * 监听 searchParams 变量，改变是触发页面的更新加载
+ */
+watchEffect(() => {
+  questionId.value = route.params.id;
+  loadData();
+});
+
 onMounted(() => {
   loadData();
 });
@@ -1462,7 +1482,7 @@ onMounted(() => {
 const changeTab = (tab: string) => {
   selectedTab.value = tab;
   router.push({
-    path: `/view/question/${question.value?.id}`,
+    path: `/question/doOnline/${question.value?.id}`,
   });
 };
 
@@ -1473,6 +1493,13 @@ const switchCase = (id: string) => {
     return item.id === id;
   });
   testCase.value = input[0].input;
+};
+
+const toOtherQuestion = (questionId: string) => {
+  router.push({
+    path: `/question/doOnline/${questionId}`,
+  });
+  visible.value = false;
 };
 </script>
 

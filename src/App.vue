@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <template
-      v-if="route.path.startsWith('/view') || route.path.startsWith('/user')"
+      v-if="
+        route.path.startsWith('/question/doOnline') ||
+        route.path.startsWith('/user')
+      "
     >
       <router-view />
     </template>

@@ -1011,7 +1011,7 @@
                           <div style="width: 300px; display: flex">
                             <a-space direction="vertical" :size="1">
                               <a-link
-                                :href="`/view/question/${item.id}`"
+                                :href="`/question/doOnline/${item.id}`"
                                 :hoverable="false"
                                 ><span class="hover-effect">
                                   {{ item.title }}
@@ -1665,7 +1665,7 @@ const doRandomQuestion = async () => {
 
   // 这里可以根据获取到的随机题目 ID 执行相关操作，比如跳转到对应题目页面等
   await router.push({
-    path: `/view/question/${randomQuestionId}`,
+    path: `/question/doOnline/${randomQuestionId}`,
   });
 };
 

@@ -28,7 +28,7 @@
             />
             <span
               style="margin-bottom: 0; text-decoration: none; color: #262626bf"
-              >day-day-up GitHub</span
+              >daydayup-ytb GitHub</span
             >
           </a>
         </div>

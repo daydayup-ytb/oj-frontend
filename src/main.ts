@@ -8,6 +8,7 @@ import router from "./router";
 import store from "./store";
 import "@/access";
 import "bytemd/dist/index.css";
+import "highlight.js/styles/stackoverflow-light.css";
 
 createApp(App)
   .use(ArcoVue)

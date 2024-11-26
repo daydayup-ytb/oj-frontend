@@ -4,8 +4,8 @@ import ACCESS_ENUM from "@/access/accessEnum";
 import UserLayout from "@/layouts/UserLayout.vue";
 import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
-import AddQuestionView from "@/views/question/AddQuestionView.vue";
-import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
+import AddQuestion from "@/views/question/AddQuestion.vue";
+import QuestionManage from "@/views/question/QuestionManage.vue";
 import QuestionBank from "@/views/question/QuestionBank.vue";
 import DoQuestionOnline from "@/views/question/DoQuestionOnline.vue";
 import QuestionSubmitView from "@/views/question/QuestionSubmitView.vue";
@@ -37,7 +37,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: QuestionBank,
   },
   {
-    path: "/questionBank",
+    path: "/question/bank",
     name: "题库",
     component: QuestionBank,
   },
@@ -47,7 +47,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: QuestionSubmitView,
   },
   {
-    path: "/view/question/:id",
+    path: "/question/doOnline/:id",
     name: "在线做题",
     component: DoQuestionOnline,
     props: true,
@@ -57,17 +57,17 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/add/question",
+    path: "/question/add",
     name: "创建题目",
-    component: AddQuestionView,
+    component: AddQuestion,
     meta: {
       access: ACCESS_ENUM.ADMIN,
     },
   },
   {
-    path: "/manage/question",
+    path: "/question/manage",
     name: "管理题目",
-    component: ManageQuestionView,
+    component: QuestionManage,
     meta: {
       access: ACCESS_ENUM.ADMIN,
     },
@@ -75,7 +75,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: "/update/question",
     name: "更新页面",
-    component: AddQuestionView,
+    component: AddQuestion,
     meta: {
       access: ACCESS_ENUM.USER,
       hideInMenu: true,

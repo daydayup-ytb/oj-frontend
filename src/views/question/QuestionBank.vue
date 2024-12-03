@@ -865,7 +865,7 @@
                 checkedTagList.length != 0
               "
               style="color: #3c3c4399; cursor: pointer"
-              @click="resetSearchParams"
+              @click="resetCheckedTagList"
               ><icon-loop
                 :size="16"
                 style="margin-right: 2px; cursor: pointer"
@@ -1724,7 +1724,7 @@ const resetTagList = () => {
 };
 
 // 删除所有搜索条件
-const resetSearchParams = () => {
+const resetCheckedTagList = () => {
   searchParams.value = {
     ...searchParams.value,
     difficulty: undefined,

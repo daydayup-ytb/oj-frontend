@@ -664,6 +664,7 @@
                               ></template
                             >
                             <button
+                              @click="showInitializeCodeModal"
                               class="language"
                               style="height: 24px; width: 24px; padding: 2px"
                             >
@@ -673,7 +674,8 @@
                             </button>
                           </a-tooltip>
                           <a-modal
-                            v-model:visible="isInitialise"
+                            v-model:visible="isInitializedCode"
+                            @ok="initializeCode()"
                             @cancel="handleCancel"
                           >
                             <template #title>
@@ -703,6 +705,7 @@
                       :val="question?.initialCode"
                       :language="form.language"
                       :handle-change="changeCode"
+                      :initialize="isInitializedCode"
                       :style="{
                         height: divHeight - 110 + 'px',
                       }"
@@ -1286,7 +1289,7 @@ const form = ref<QuestionSubmitAddRequest>({
 });
 
 const toHomePage = () => {
-  window.location.href = "/questionBank"; // 跳转到另一个页面
+  window.location.href = "/question/bank"; // 跳转到另一个页面
 };
 
 const handleMouseOver = () => {
@@ -1373,11 +1376,21 @@ const pitchOn = (number: number) => {
   }
 };
 
-// 还原到默认的代码模板
-const isInitialise = ref(false);
-const showInitialise = () => {
-  isInitialise.value = !isInitialise.value;
+// 是否初始化代码模板
+const isInitializedCode = ref(false);
+
+//展示初始化模板确认模态框
+const showInitializeCodeModal = () => {
+  isInitializedCode.value = !isInitializedCode.value;
 };
+
+//初始化代码模板
+const initializeCode = () => {
+  const questionId = route.params.id as string;
+  localStorage.removeItem(questionId);
+  isInitializedCode.value = true;
+};
+
 const handleClick = () => {
   visible.value = true;
 };

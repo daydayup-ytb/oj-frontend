@@ -9,6 +9,7 @@ import QuestionManage from "@/views/question/QuestionManage.vue";
 import QuestionBank from "@/views/question/QuestionBank.vue";
 import DoQuestionOnline from "@/views/question/DoQuestionOnline.vue";
 import QuestionSubmitView from "@/views/question/QuestionSubmitView.vue";
+import UpdateQuestion from "@/views/question/UpdateQuestion.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -73,11 +74,11 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/update/question",
+    path: "/question/update/:id",
     name: "更新页面",
-    component: AddQuestion,
+    component: UpdateQuestion,
     meta: {
-      access: ACCESS_ENUM.USER,
+      access: ACCESS_ENUM.ADMIN,
       hideInMenu: true,
     },
   },

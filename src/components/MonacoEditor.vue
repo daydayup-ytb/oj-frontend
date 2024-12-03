@@ -4,23 +4,21 @@
     ref="codeEditorRef"
     style="min-height: 300px; height: 48vh"
   ></div>
-  <!--  <a-button @click="fillValue">填充值</a-button>-->
 </template>
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
 import { onMounted, ref, toRaw, withDefaults, defineProps, watch } from "vue";
+import { useRoute } from "vue-router";
 
 /**
- * 定义组件类型
+ * 定义组件属性类型
  */
 interface Props {
   val: string;
   language: string;
   handleChange: (v: string) => void;
+  initialize: boolean;
 }
-
-const codeEditorRef = ref();
-const codeEditor = ref();
 
 /**
  * 给组件指定初始值
@@ -31,7 +29,25 @@ const props = withDefaults(defineProps<Props>(), {
   handleChange: (v: string) => {
     console.log(v);
   },
+  initialize: false,
 });
+const codeEditorRef = ref();
+const codeEditor = ref();
+const route = useRoute();
+//是否初始化代码模板
+const isInitializedCode = ref(props.initialize);
+
+// 将代码缓存到本地
+const saveCodeToLocalStorage = (value: string) => {
+  const questionId = route.params.id as string;
+  localStorage.setItem(questionId, value);
+};
+
+// 获取当前题目编号的代码缓存
+const getCodeFromLocalStorage = () => {
+  const questionId = route.params.id as string;
+  return localStorage.getItem(questionId);
+};
 
 onMounted(() => {
   if (!codeEditorRef.value) {
@@ -83,25 +99,34 @@ onMounted(() => {
   monaco.editor.setTheme("my-theme");
   //编辑 监听内容变化
   codeEditor.value.onDidChangeModelContent(() => {
-    props.handleChange(toRaw(codeEditor.value).getValue());
+    const value = toRaw(codeEditor.value).getValue();
+    props.handleChange(value);
+    saveCodeToLocalStorage(value);
   });
 });
 
 watch(
-  () => [props.val, props.language],
+  () => [props.val, props.language, props.initialize],
   () => {
-    // if (codeEditor.value) {
-    //   monaco.editor.setModelLanguage(
-    //     toRaw(codeEditor.value).getModel(),
-    //     props.language
-    //   );
-    // }
+    //设置编辑器编程语言
     monaco.editor.setModelLanguage(
       toRaw(codeEditor.value).getModel(),
       props.language
     );
     if (codeEditor.value && toRaw(codeEditor.value).getValue() !== props.val) {
+      //如果当前题目无缓存
+      if (!getCodeFromLocalStorage()) {
+        //设置默认值
+        toRaw(codeEditor.value).setValue(props.val);
+      } else {
+        //从缓存中获取到代码
+        toRaw(codeEditor.value).setValue(getCodeFromLocalStorage());
+      }
+    }
+    //初始化代码模板
+    if (isInitializedCode.value) {
       toRaw(codeEditor.value).setValue(props.val);
+      isInitializedCode.value = !isInitializedCode.value;
     }
   }
 );

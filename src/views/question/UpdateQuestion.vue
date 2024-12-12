@@ -173,7 +173,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { QuestionControllerService } from "../../../request";
+import { QuestionControllerService } from "../../../req/question";
 import message from "@arco-design/web-vue/es/message";
 import { useRoute } from "vue-router";
 import MonacoEditor from "@/components/MonacoEditor.vue";

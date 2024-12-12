@@ -48,7 +48,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, watchEffect } from "vue";
-import { Question, QuestionControllerService } from "../../../request";
+import { QuestionControllerService } from "../../../req/question";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import moment from "moment";

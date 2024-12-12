@@ -115,7 +115,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { UserControllerService, UserRegisterRequest } from "../../../request";
+import { UserControllerService, UserRegisterRequest } from "../../../req/user";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import IconQrCode from "@/icon/icon-qr-code.vue";

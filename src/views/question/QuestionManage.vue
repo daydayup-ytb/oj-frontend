@@ -885,8 +885,7 @@ import {
   Question,
   QuestionControllerService,
   QuestionQueryRequest,
-  UserControllerService,
-} from "../../../request";
+} from "../../../req/question";
 import message from "@arco-design/web-vue/es/message";
 import { useRoute, useRouter } from "vue-router";
 import moment from "moment/moment";

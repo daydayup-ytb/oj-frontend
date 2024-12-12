@@ -139,7 +139,7 @@
           align-items: center;
         "
       >
-        <button :class="{ runButton: true }">
+        <button @click="doRun" :class="{ runButton: true }">
           <icon-run size="18" color="#686868" style="margin-right: 7px" />
           <span style="color: #1a1a1a">运行</span>
         </button>
@@ -765,9 +765,10 @@
                     >
                       <div style="display: flex; align-items: center">
                         <button
+                          @click="switchTestTab('testCaseTab')"
                           :class="{
-                            'custom-button': showNum === 1,
-                            'active-tab': showNum != 1,
+                            'custom-button': isShowedTestCaseTab,
+                            'active-tab': !isShowedTestCaseTab,
                           }"
                           style="padding: 2px; height: 28px; margin-right: -8px"
                         >
@@ -787,9 +788,10 @@
                         </button>
                         <a-divider direction="vertical" />
                         <button
+                          @click="switchTestTab('testResultTab')"
                           :class="{
-                            'custom-button': showNum === 2,
-                            'active-tab': showNum != 2,
+                            'custom-button': isShowedTestResultTab,
+                            'active-tab': !isShowedTestResultTab,
                           }"
                           style="padding: 2px; height: 28px; margin-left: -10px"
                         >
@@ -814,8 +816,10 @@
                         </button>
                       </div>
                     </div>
+                  </div>
+                  <div style="height: 91%; overflow: auto">
                     <div
-                      v-if="showNum == 1"
+                      v-if="isShowedTestCaseTab"
                       style="
                         margin: 16px 20px;
                         display: flex;
@@ -826,14 +830,14 @@
                     >
                       <div style="display: flex">
                         <a-tag
-                          :checked="testCase.id === switchCaseId"
+                          :checked="Number(testCase.id) === switchedTestCaseId"
                           checkable
                           :closable="close"
                           size="large"
                           style="border-radius: 5px; margin-right: 10px"
                           v-for="(testCase, index) of testCaseList"
                           :key="index"
-                          @click="switchCase(testCase?.id)"
+                          @click="switchTestCase(Number(testCase?.id))"
                         >
                           <span style="font-size: 14px"
                             >Case {{ index + 1 }}</span
@@ -841,7 +845,7 @@
                         </a-tag>
                       </div>
                       <div
-                        v-for="item of testCase"
+                        v-for="item of InputOfTestCase"
                         :key="item.paramName"
                         style="width: 100%; margin-bottom: 7px; margin-top: 7px"
                       >
@@ -861,10 +865,13 @@
                         />
                       </div>
                     </div>
-                  </div>
-                  <div style="height: 91%; overflow: auto">
                     <div
-                      v-if="showNum == 2 && isRun && runStatus == 0"
+                      v-if="
+                        isShowedTestResultTab &&
+                        isRun &&
+                        (Number(questionRunResult?.code) === 8000 ||
+                          Number(questionRunResult?.code) === 8003)
+                      "
                       style="
                         margin: 16px 20px;
                         display: flex;
@@ -874,7 +881,7 @@
                     >
                       <div style="display: flex; align-items: center">
                         <span
-                          v-if="runResults?.judgeInfo.message === 'Accepted'"
+                          v-if="Number(questionRunResult?.code) === 8000"
                           style="
                             color: #2db55d;
                             font-size: 22px;
@@ -883,30 +890,40 @@
                           >通过</span
                         >
                         <span
-                          v-if="
-                            runResults?.judgeInfo.message === 'Wrong Answer'
-                          "
+                          v-if="Number(questionRunResult?.code) === 8003"
                           style="
                             color: #ef4743;
                             font-size: 22px;
                             margin-right: 15px;
                           "
-                          >错误解答</span
+                          >解答错误</span
                         >
                         <span style="color: #3c3c4399; margin-right: 10px"
-                          >执行用时：{{ runResults?.judgeInfo.time }}ms</span
+                          >执行用时：{{
+                            questionRunResult?.executeTime
+                          }}ms</span
                         >
                       </div>
                       <a-divider size="0" :margin="10" />
                       <div style="display: flex">
                         <a-tag
-                          :checked="index === indexNumber"
+                          :checked="
+                            Number(questionRunResultVo.id) ===
+                            switchedQuestionRunResultCaseId
+                          "
                           checkable
                           :closable="close"
                           size="large"
                           style="border-radius: 5px; margin-right: 10px"
-                          v-for="(item, index) of testCaseList"
+                          v-for="(
+                            questionRunResultVo, index
+                          ) of questionRunResultVoList"
                           :key="index"
+                          @click="
+                            switchQuestionRunResultCase(
+                              Number(questionRunResultVo?.id)
+                            )
+                          "
                         >
                           <span style="font-size: 14px">Case {{ index }}</span>
                         </a-tag>
@@ -921,50 +938,32 @@
                         >输入</span
                       >
                       <div
-                        style="
-                          width: 99%;
-                          height: 36px;
-                          background-color: #f7f7f8;
-                          display: flex;
-                          flex-direction: column;
-                          align-items: flex-start;
-                          justify-content: center;
-                          padding: 10px 10px;
-                        "
+                        v-for="inputTestCase of questionRunResultVo?.input"
+                        :key="inputTestCase.paramName"
+                        style="width: 100%; margin-bottom: 7px; margin-top: 7px"
                       >
-                        <span
+                        <div
                           style="
-                            color: #3c3c4399;
-                            font-size: 12px;
-                            margin-bottom: 10px;
+                            width: 99%;
+                            height: 36px;
+                            background-color: #f7f7f8;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            justify-content: center;
+                            padding: 10px 10px;
                           "
-                          >{{ inputListName[indexNum][0] }} =</span
                         >
-                        <span>{{ testCaseList[indexNum][0] }}</span>
-                      </div>
-                      <div
-                        v-if="inputListName[indexNum][1]"
-                        style="
-                          width: 99%;
-                          height: 36px;
-                          background-color: #f7f7f8;
-                          display: flex;
-                          flex-direction: column;
-                          align-items: flex-start;
-                          justify-content: center;
-                          padding: 10px 10px;
-                          margin-top: 10px;
-                        "
-                      >
-                        <span
-                          style="
-                            color: #3c3c4399;
-                            font-size: 12px;
-                            margin-bottom: 10px;
-                          "
-                          >{{ inputListName[indexNum][1] }} =</span
-                        >
-                        <span>{{ testCaseList[indexNum][1] }}</span>
+                          <span
+                            style="
+                              color: #3c3c4399;
+                              font-size: 12px;
+                              margin-bottom: 10px;
+                            "
+                            >{{ inputTestCase?.paramName }} =</span
+                          >
+                          <span>{{ inputTestCase?.paramValue }}</span>
+                        </div>
                       </div>
                       <span
                         style="
@@ -976,6 +975,8 @@
                         >预计结果</span
                       >
                       <div
+                        v-for="expectOutputItem of questionRunResultVo?.expectOutput"
+                        :key="expectOutputItem.paramName"
                         style="
                           width: 99%;
                           height: 24px;
@@ -987,7 +988,7 @@
                           padding: 10px 10px;
                         "
                       >
-                        <span>{{ expectedOutput[indexNum] }}</span>
+                        <span>{{ expectOutputItem?.paramValue }}</span>
                       </div>
                       <span
                         style="
@@ -999,6 +1000,8 @@
                         >实际输出</span
                       >
                       <div
+                        v-for="outputItem of questionRunResultVo?.output"
+                        :key="outputItem.paramName"
                         style="
                           width: 99%;
                           height: 24px;
@@ -1010,11 +1013,15 @@
                           padding: 10px 10px;
                         "
                       >
-                        <span>{{ actualOutput[indexNum] }}</span>
+                        <span>{{ outputItem?.paramValue }}</span>
                       </div>
                     </div>
                     <div
-                      v-if="showNum == 2 && isRun && runStatus == 1"
+                      v-if="
+                        isShowedTestResultTab &&
+                        isRun &&
+                        Number(questionRunResult?.code) == -2
+                      "
                       style="
                         margin: 16px 20px;
                         display: flex;
@@ -1047,12 +1054,17 @@
                         "
                       >
                         <span style="color: #f63636; margin-left: 5px">{{
-                          runResults?.error_message
+                          questionRunResult?.message
                         }}</span>
                       </div>
                     </div>
                     <div
-                      v-if="showNum == 2 && isRun && runStatus == 2"
+                      v-if="
+                        isShowedTestResultTab &&
+                        isRun &&
+                        (Number(questionRunResult?.code) == 8001 ||
+                          Number(questionRunResult?.code) == 8002)
+                      "
                       style="
                         margin: 16px 20px;
                         display: flex;
@@ -1062,7 +1074,7 @@
                     >
                       <div style="display: flex; align-items: center">
                         <span
-                          v-if="runResults.judgeInfo.message == 'Compile Error'"
+                          v-if="Number(questionRunResult?.code) == 8001"
                           style="
                             color: #ef4743;
                             font-size: 22px;
@@ -1071,9 +1083,7 @@
                           >编译错误</span
                         >
                         <span
-                          v-if="
-                            runResults.judgeInfo.message == 'Execution Error'
-                          "
+                          v-if="Number(questionRunResult?.code) == 8002"
                           style="
                             color: #ef4743;
                             font-size: 22px;
@@ -1101,12 +1111,12 @@
                             color: #f63636;
                             line-height: 21px;
                           "
-                          >{{ runResults?.error_message }}</pre
+                          >{{ questionRunResult?.errorInfo }}</pre
                         >
                       </div>
                     </div>
                     <div
-                      v-if="showNum == 2 && !isRun"
+                      v-if="isShowedTestResultTab && !isRun"
                       style="
                         width: 100%;
                         height: 100%;
@@ -1250,10 +1260,13 @@ import {
   watchEffect,
 } from "vue";
 import {
+  InputItem,
   QuestionControllerService,
   QuestionQueryRequest,
+  QuestionRunResultVo,
   type QuestionSubmitAddRequest,
-} from "../../../request";
+  TestCase,
+} from "../../../req/question";
 import message from "@arco-design/web-vue/es/message";
 import MonacoEditor from "@/components/MonacoEditor.vue";
 import IconRun from "@/icon/icon-run.vue";
@@ -1303,7 +1316,7 @@ const handleMouseLeave = () => {
 //题目编号
 const questionId = ref();
 
-const testCase = ref();
+const InputOfTestCase = ref<InputItem[]>();
 
 const buttonStyle = ref({ backgroundColor: "#f0f0f0" });
 const smallColor = ref("#737373");
@@ -1315,13 +1328,22 @@ const showNum = ref(1);
 const isRotate = ref(false);
 const indexNumber = ref(0);
 //选中测试用例id
-const switchCaseId = ref("1");
+const switchedTestCaseId = ref(1);
+const switchedQuestionRunResultCaseId = ref(1);
 const indexNum = ref(0);
-const testCaseList = ref([0]);
+const testCaseList = ref<TestCase[]>([]);
 const inputListName = ref([""]);
 const listNum = ref();
 const isRun = ref(false);
 const runResults = ref();
+const questionRunResult = ref();
+const questionRunResultVoList = ref<QuestionRunResultVo[]>([]);
+const questionRunResultVo = ref<QuestionRunResultVo>();
+//是否展示测试结果Tab
+const isShowedTestResultTab = ref(false);
+//是否展示测试用例Tab
+const isShowedTestCaseTab = ref(false);
+
 // 运作状态
 const runStatus = ref(0);
 // 预计输出
@@ -1458,7 +1480,10 @@ const loadData = async () => {
     console.log(res.data);
     question.value = res.data;
     testCaseList.value = question.value?.judgeCase;
-    testCase.value = testCaseList.value[0]?.input;
+    console.log(testCaseList.value);
+    isShowedTestCaseTab.value = true;
+    isShowedTestResultTab.value = false;
+    InputOfTestCase.value = testCaseList.value[0]?.input;
     // codeChange(res.data?.initialCode?.java as string);
     // form.value.code = res.data?.initialCode?.java;
     // console.log(form.value.code);
@@ -1476,6 +1501,30 @@ const doSubmit = async () => {
     message.success("提交成功");
   } else {
     message.error("提交失败");
+  }
+};
+
+const doRun = async () => {
+  const res = await QuestionControllerService.doQuestionRunUsingPost({
+    ...form.value,
+    questionId: question.value?.id,
+    testCaseList: testCaseList.value,
+  });
+  if (res.code === 0) {
+    isShowedTestCaseTab.value = false;
+    isShowedTestResultTab.value = true;
+    isRun.value = true;
+    questionRunResult.value = res.data;
+    if (questionRunResult.value?.code == 8000) {
+      questionRunResultVoList.value = res.data.questionRunResultVoList;
+      questionRunResultVo.value = questionRunResultVoList.value[0];
+      switchedQuestionRunResultCaseId.value = Number(
+        questionRunResultVo.value?.id
+      );
+      message.success("运行成功");
+    }
+  } else {
+    message.error("运行失败");
   }
 };
 
@@ -1498,14 +1547,29 @@ const changeTab = (tab: string) => {
     path: `/question/doOnline/${question.value?.id}`,
   });
 };
-
+const switchTestTab = (tab: string) => {
+  if (tab == "testCaseTab") {
+    isShowedTestCaseTab.value = true;
+    isShowedTestResultTab.value = false;
+  } else if (tab == "testResultTab") {
+    isShowedTestResultTab.value = true;
+    isShowedTestCaseTab.value = false;
+  }
+};
 //选择测试用例
-const switchCase = (id: string) => {
-  switchCaseId.value = id;
+const switchTestCase = (id: number) => {
+  switchedTestCaseId.value = id;
   let input = testCaseList.value.filter((item) => {
-    return item.id === id;
+    return Number(item.id) === id;
   });
-  testCase.value = input[0].input;
+  InputOfTestCase.value = input[0].input;
+};
+
+const switchQuestionRunResultCase = (id: number) => {
+  switchedQuestionRunResultCaseId.value = id;
+  questionRunResultVo.value = questionRunResultVoList.value.filter((item) => {
+    return Number(item.id) === id;
+  })[0];
 };
 
 const toOtherQuestion = (questionId: string) => {

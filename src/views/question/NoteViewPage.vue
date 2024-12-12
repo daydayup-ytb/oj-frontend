@@ -290,7 +290,7 @@
 import {
   QuestionControllerService,
   QuestionSubmitQueryRequest,
-} from "../../../request";
+} from "../../../req/question";
 import message from "@arco-design/web-vue/es/message";
 import { defineProps, ref, watch, watchEffect, withDefaults } from "vue";
 import { useRoute, useRouter } from "vue-router";

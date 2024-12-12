@@ -1130,7 +1130,7 @@ import { onMounted, ref, watchEffect } from "vue";
 import {
   QuestionControllerService,
   QuestionQueryRequest,
-} from "../../../request";
+} from "../../../req/question";
 import message from "@arco-design/web-vue/es/message";
 import { useRoute, useRouter } from "vue-router";
 import IconPlayer from "@/icon/icon-player.vue";

@@ -25,7 +25,10 @@
                 </a-button>
               </a-form-item>
               <a-form-item>
-                <a-trigger position="bl" :popup-visible="displayedDifficulty">
+                <a-trigger
+                  position="bl"
+                  :popup-visible="isShowedDifficultyOptions"
+                >
                   <a-button
                     style="
                       width: 103px;
@@ -88,7 +91,7 @@
                 </a-trigger>
               </a-form-item>
               <a-form-item>
-                <a-trigger position="bl" :popup-visible="displayedStatus">
+                <a-trigger position="bl" :popup-visible="isShowedStateOptions">
                   <a-button
                     style="
                       width: 103px;
@@ -1120,7 +1123,225 @@
           </a-pagination>
         </div>
       </a-col>
-      <a-col :span="7"></a-col>
+      <a-col :span="7">
+        <div class="right">
+          <div class="calendar">
+            <calendar-collapse>
+              <template #header>
+                <calendar-header />
+              </template>
+              <template #content>
+                <calendar-week />
+                <CalendarTable />
+              </template>
+            </calendar-collapse>
+          </div>
+          <div v-if="store.state.user?.loginUser?.id" style="margin-left: 10px">
+            <div
+              style="
+                width: 270px;
+                height: 152px;
+                border-radius: 10px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.125);
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 16px;
+                "
+              >
+                <span>当前进度</span>
+                <div style="display: flex; justify-content: center">
+                  <a-space></a-space>
+                  <a-button
+                    style="
+                      width: 108px;
+                      height: 24px;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      border-radius: 5px 0 0 5px; /* 左上角和左下角为圆角 */
+                      font-size: 12px; /* 调整字体大小 */
+                      margin-right: 1px; /* 添加右边距 */
+                    "
+                    >我的进度
+                    <icon-down />
+                  </a-button>
+                  <a-button
+                    style="
+                      border-radius: 0 5px 5px 0; /* 左上角和左下角为圆角 */
+                      width: 22px;
+                      height: 24px;
+                    "
+                  >
+                    <icon-settings
+                      :size="20"
+                      style="margin-left: -7px; margin-right: -7px"
+                    />
+                  </a-button>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  padding: 0 20px 0 20px;
+                "
+              >
+                <div class="progress-container">
+                  <a-progress
+                    type="circle"
+                    :stroke-width="3"
+                    :show-text="false"
+                    percent="0.22"
+                    :style="{ transform: 'scale(1.18)' }"
+                    :size="'large'"
+                    :color="{ '0%': '#FFA116', '100%': '#FFA116' }"
+                  />
+                  <div class="progress-text" v-if="true">
+                    <span style="font-size: 12px; color: #3c3c4399">全部</span>
+                    <span
+                      style="
+                        font-size: 24px;
+                        color: #1c1c1c;
+                        font-weight: bold;
+                        margin-top: 3px;
+                      "
+                      >11</span
+                    >
+                    <a-divider margin="0" />
+                    <span
+                      style="font-size: 12px; color: #3c3c434d; margin-top: 3px"
+                      >200</span
+                    >
+                  </div>
+                  <!--                  <div-->
+                  <!--                    class="progress-text"-->
+                  <!--                    style="cursor: default"-->
+                  <!--                    v-if="false"-->
+                  <!--                  >-->
+                  <!--                    <a-statistic-->
+                  <!--                      value="0.22 * 100"-->
+                  <!--                      :precision="1"-->
+                  <!--                      :value-style="{-->
+                  <!--                        color: '#1c1c1c',-->
+                  <!--                        fontSize: '19px',-->
+                  <!--                        fontWeight: 'bold',-->
+                  <!--                      }"-->
+                  <!--                    >-->
+                  <!--                      <template #suffix>%</template>-->
+                  <!--                    </a-statistic>-->
+                  <!--                    <span-->
+                  <!--                      style="-->
+                  <!--                        font-size: 12px;-->
+                  <!--                        color: #3c3c4399;-->
+                  <!--                        white-space: nowrap;-->
+                  <!--                      "-->
+                  <!--                      >提交通过率</span-->
+                  <!--                    >-->
+                  <!--                  </div>-->
+                  <!--                  <div-->
+                  <!--                    class="progress-text"-->
+                  <!--                    v-if="briefnessSubmissionPassRateNumShow"-->
+                  <!--                  >-->
+                  <!--                    <a-statistic-->
+                  <!--                      :value="briefnessSubmissionPassRateNum * 100"-->
+                  <!--                      :precision="1"-->
+                  <!--                      :value-style="{-->
+                  <!--                        color: '#00af9b',-->
+                  <!--                        fontSize: '19px',-->
+                  <!--                        fontWeight: 'bold',-->
+                  <!--                      }"-->
+                  <!--                    >-->
+                  <!--                      <template #suffix>%</template>-->
+                  <!--                    </a-statistic>-->
+                  <!--                    <span-->
+                  <!--                      style="-->
+                  <!--                        font-size: 12px;-->
+                  <!--                        color: #3c3c4399;-->
+                  <!--                        white-space: nowrap;-->
+                  <!--                      "-->
+                  <!--                      >提交通过率</span-->
+                  <!--                    >-->
+                  <!--                  </div>-->
+                  <!--                  <div-->
+                  <!--                    class="progress-text"-->
+                  <!--                    v-if="mediumSubmissionPassRateNumShow"-->
+                  <!--                  >-->
+                  <!--                    <a-statistic-->
+                  <!--                      :value="mediumSubmissionPassRateNum * 100"-->
+                  <!--                      :precision="1"-->
+                  <!--                      :value-style="{-->
+                  <!--                        color: '#ffb800',-->
+                  <!--                        fontSize: '19px',-->
+                  <!--                        fontWeight: 'bold',-->
+                  <!--                      }"-->
+                  <!--                    >-->
+                  <!--                      <template #suffix>%</template>-->
+                  <!--                    </a-statistic>-->
+                  <!--                    <span-->
+                  <!--                      style="-->
+                  <!--                        font-size: 12px;-->
+                  <!--                        color: #3c3c4399;-->
+                  <!--                        white-space: nowrap;-->
+                  <!--                      "-->
+                  <!--                      >提交通过率</span-->
+                  <!--                    >-->
+                  <!--                  </div>-->
+                  <!--                  <div-->
+                  <!--                    class="progress-text"-->
+                  <!--                    v-if="difficultySubmissionPassRateNumShow"-->
+                  <!--                  >-->
+                  <!--                    <a-statistic-->
+                  <!--                      :value="difficultySubmissionPassRateNum * 100"-->
+                  <!--                      :precision="1"-->
+                  <!--                      :value-style="{-->
+                  <!--                        color: '#ff2d55',-->
+                  <!--                        fontSize: '19px',-->
+                  <!--                        fontWeight: 'bold',-->
+                  <!--                      }"-->
+                  <!--                    >-->
+                  <!--                      <template #suffix>%</template>-->
+                  <!--                    </a-statistic>-->
+                  <!--                    <span-->
+                  <!--                      style="-->
+                  <!--                        font-size: 12px;-->
+                  <!--                        color: #3c3c4399;-->
+                  <!--                        white-space: nowrap;-->
+                  <!--                      "-->
+                  <!--                      >提交通过率</span-->
+                  <!--                    >-->
+                  <!--                  </div>-->
+                </div>
+                <div style="display: flex; gap: 15px; height: 68px">
+                  <div style="width: 24px; cursor: pointer">
+                    <span style="color: #00af9b; font-size: 12px">简单</span>
+                    <div style="margin-top: 10px; font-weight: bold">11</div>
+                    <a-divider :margin="4" />
+                    <div style="font-size: 12px; color: #3c3c434d">22</div>
+                  </div>
+                  <div style="width: 24px; cursor: pointer">
+                    <span style="color: #ffb800; font-size: 12px">中等</span>
+                    <div style="margin-top: 10px; font-weight: bold">33</div>
+                    <a-divider :margin="4" />
+                    <div style="font-size: 12px; color: #3c3c434d">100</div>
+                  </div>
+                  <div style="width: 24px; cursor: pointer">
+                    <span style="color: #ff2d55; font-size: 12px">困难</span>
+                    <div style="margin-top: 10px; font-weight: bold">20</div>
+                    <a-divider :margin="4" />
+                    <div style="font-size: 12px; color: #3c3c434d">80</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a-col>
     </a-row>
   </div>
 </template>
@@ -1135,6 +1356,10 @@ import message from "@arco-design/web-vue/es/message";
 import { useRoute, useRouter } from "vue-router";
 import IconPlayer from "@/icon/icon-player.vue";
 import { useStore } from "vuex";
+import CalendarCollapse from "@/components/calendar/calendar-collapse.vue";
+import CalendarHeader from "@/components/calendar/calendar-header.vue";
+import CalendarWeek from "@/components/calendar/calendar-week.vue";
+import CalendarTable from "@/components/calendar/calendar-table.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -1185,17 +1410,17 @@ const rotateQuestionListIcon = () => {
 // 旋转难度按钮时,取消其他按钮旋转状态
 const rotateDifficultyIcon = () => {
   isRotatedDifficultyIcon.value = !isRotatedDifficultyIcon.value;
-  displayedDifficulty.value = !displayedDifficulty.value;
+  isShowedDifficultyOptions.value = !isShowedDifficultyOptions.value;
   isRotatedStateIcon.value = false;
-  displayedStatus.value = false;
+  isShowedStateOptions.value = false;
 };
 
 // 旋转状态按钮时,取消其他按钮旋转状态
 const rotateStateIcon = () => {
   isRotatedStateIcon.value = !isRotatedStateIcon.value;
-  displayedStatus.value = !displayedStatus.value;
+  isShowedStateOptions.value = !isShowedStateOptions.value;
   isRotatedDifficultyIcon.value = false;
-  displayedDifficulty.value = false;
+  isShowedDifficultyOptions.value = false;
 };
 
 //旋转标签按钮
@@ -1206,9 +1431,9 @@ const rotateTagIcon = () => {
 // 开启标签按钮时关闭其他按钮
 const showTagList = () => {
   isRotatedStateIcon.value = false;
-  displayedStatus.value = false;
+  isShowedStateOptions.value = false;
   isRotatedDifficultyIcon.value = false;
-  displayedDifficulty.value = false;
+  isShowedDifficultyOptions.value = false;
 };
 
 // 关闭时转动标签Icon图标
@@ -1456,9 +1681,9 @@ const checkedDifficulty = ref(0);
 //选中的状态参数
 const checkedState = ref(0);
 
-const displayedDifficulty = ref(false);
+const isShowedDifficultyOptions = ref(false);
 
-const displayedStatus = ref(false);
+const isShowedStateOptions = ref(false);
 
 const display = ref(false);
 
@@ -1559,7 +1784,7 @@ const doFilterDifficulty = (difficultyParam: number) => {
     };
     checkedDifficulty.value = difficultyParam;
     isRotatedDifficultyIcon.value = !isRotatedDifficultyIcon.value;
-    displayedDifficulty.value = !displayedDifficulty.value;
+    isShowedDifficultyOptions.value = !isShowedDifficultyOptions.value;
   } else {
     searchParams.value = {
       ...searchParams.value,
@@ -1567,7 +1792,7 @@ const doFilterDifficulty = (difficultyParam: number) => {
     };
     checkedDifficulty.value = 0;
     isRotatedDifficultyIcon.value = !isRotatedDifficultyIcon.value;
-    displayedDifficulty.value = !displayedDifficulty.value;
+    isShowedDifficultyOptions.value = !isShowedDifficultyOptions.value;
   }
 };
 
@@ -1580,7 +1805,7 @@ const doFilterState = (stateParam: number) => {
     };
     checkedState.value = stateParam;
     isRotatedStateIcon.value = !isRotatedStateIcon.value;
-    displayedStatus.value = !displayedStatus.value;
+    isShowedStateOptions.value = !isShowedStateOptions.value;
   } else {
     checkedState.value = 0;
     searchParams.value = {
@@ -1588,7 +1813,7 @@ const doFilterState = (stateParam: number) => {
       state: undefined,
     };
     isRotatedStateIcon.value = !isRotatedStateIcon.value;
-    displayedStatus.value = !displayedStatus.value;
+    isShowedStateOptions.value = !isShowedStateOptions.value;
   }
   return;
 };

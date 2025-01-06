@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useStore } from "vuex";
 import IconDropOut from "@/icon/icon-drop-out.vue";
-import { UserControllerService } from "../../request";
+import { UserControllerService } from "../../req/user";
 import message from "@arco-design/web-vue/es/message";
 import { useRouter } from "vue-router";
 import IconAccountSetting from "@/icon/icon-account-setting.vue";

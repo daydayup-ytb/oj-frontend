@@ -317,12 +317,12 @@
               </template>
               <template v-if="selectedTab === 'submissions'">
                 <div>
-                  <NoteViewPage :question="question" />
+                  <QuestionSubmitRecordsPage :question="question" />
                 </div>
               </template>
               <template v-if="selectedTab === 'description'">
                 <div style="overflow: auto; height: 86vh">
-                  <QuestionViewPage :question="question" />
+                  <QuestionContentPage :question="question" />
                 </div>
               </template>
             </div>
@@ -1273,9 +1273,9 @@ import IconRun from "@/icon/icon-run.vue";
 import IconFlame from "@/icon/icon-flame.vue";
 import IconSmallBell from "@/icon/icon-small-bell.vue";
 import IconSubmit from "@/icon/icon-submit.vue";
-import NoteViewPage from "@/views/question/QuestionSubmitRecordsPage.vue";
+import QuestionSubmitRecordsPage from "@/views/question/QuestionSubmitRecordsPage.vue";
 import AnswerViewPage from "@/views/question/QuestionAnswerPage.vue";
-import QuestionViewPage from "@/views/question/QuestionContentPage.vue";
+import QuestionContentPage from "@/views/question/QuestionContentPage.vue";
 import { useStore } from "vuex";
 import SetCenter from "@/components/SetCenter.vue";
 import { useRoute, useRouter } from "vue-router";

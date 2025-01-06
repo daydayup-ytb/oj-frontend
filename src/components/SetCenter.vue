@@ -108,7 +108,7 @@ const goHome = () => {
           >
             <img
               :src="require('@/assets/笔记本.png')"
-              alt="收藏夹"
+              alt="笔记本"
               style="width: 42px"
             />
             <span style="font-size: 12px; color: #0000008c">笔记本</span>
@@ -125,7 +125,7 @@ const goHome = () => {
           >
             <img
               :src="require('@/assets/我的题解.png')"
-              alt="收藏夹"
+              alt="我的题解"
               style="width: 42px"
             />
             <span style="font-size: 12px; color: #0000008c">我的题解</span>
@@ -142,7 +142,7 @@ const goHome = () => {
           >
             <img
               :src="require('@/assets/做题分析.png')"
-              alt="收藏夹"
+              alt="做题分析"
               style="width: 42px"
             />
             <span style="font-size: 12px; color: #0000008c">做题分析</span>
@@ -159,7 +159,7 @@ const goHome = () => {
           >
             <img
               :src="require('@/assets/积分.png')"
-              alt="收藏夹"
+              alt="积分"
               style="width: 42px"
             />
             <span style="font-size: 12px; color: #0000008c">积分</span>
@@ -176,7 +176,7 @@ const goHome = () => {
           >
             <img
               :src="require('@/assets/进度管理.png')"
-              alt="收藏夹"
+              alt="进度管理"
               style="width: 42px"
             />
             <span style="font-size: 12px; color: #0000008c">进度管理</span>

@@ -869,8 +869,8 @@
                       v-if="
                         isShowedTestResultTab &&
                         isRun &&
-                        (Number(questionRunResult?.code) === 8000 ||
-                          Number(questionRunResult?.code) === 8003)
+                        (Number(questionRunResult?.code) === 8011 ||
+                          Number(questionRunResult?.code) === 8012)
                       "
                       style="
                         margin: 16px 20px;
@@ -881,7 +881,7 @@
                     >
                       <div style="display: flex; align-items: center">
                         <span
-                          v-if="Number(questionRunResult?.code) === 8000"
+                          v-if="Number(questionRunResult?.code) === 8011"
                           style="
                             color: #2db55d;
                             font-size: 22px;
@@ -890,7 +890,7 @@
                           >通过</span
                         >
                         <span
-                          v-if="Number(questionRunResult?.code) === 8003"
+                          v-if="Number(questionRunResult?.code) === 8012"
                           style="
                             color: #ef4743;
                             font-size: 22px;
@@ -1062,8 +1062,8 @@
                       v-if="
                         isShowedTestResultTab &&
                         isRun &&
-                        (Number(questionRunResult?.code) == 8001 ||
-                          Number(questionRunResult?.code) == 8002)
+                        (Number(questionRunResult?.code) == 8003 ||
+                          Number(questionRunResult?.code) == 8010)
                       "
                       style="
                         margin: 16px 20px;
@@ -1074,7 +1074,7 @@
                     >
                       <div style="display: flex; align-items: center">
                         <span
-                          v-if="Number(questionRunResult?.code) == 8001"
+                          v-if="Number(questionRunResult?.code) == 8003"
                           style="
                             color: #ef4743;
                             font-size: 22px;
@@ -1083,7 +1083,7 @@
                           >编译错误</span
                         >
                         <span
-                          v-if="Number(questionRunResult?.code) == 8002"
+                          v-if="Number(questionRunResult?.code) == 8010"
                           style="
                             color: #ef4743;
                             font-size: 22px;
@@ -1515,7 +1515,10 @@ const doRun = async () => {
     isShowedTestResultTab.value = true;
     isRun.value = true;
     questionRunResult.value = res.data;
-    if (questionRunResult.value?.code == 8000) {
+    if (
+      questionRunResult.value?.code == 8011 ||
+      questionRunResult.value?.code == 8012
+    ) {
       questionRunResultVoList.value = res.data.questionRunResultVoList;
       questionRunResultVo.value = questionRunResultVoList.value[0];
       switchedQuestionRunResultCaseId.value = Number(
